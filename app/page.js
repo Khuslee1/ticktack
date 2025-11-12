@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 export default function Home() {
   const [arr, setArr] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
@@ -12,22 +12,22 @@ export default function Home() {
     [6, 7, 8],
     [0, 3, 6],
     [1, 4, 7],
-    [2, 4, 8],
+    [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6],
   ];
 
   console.log("Win", win);
 
-  const ashiglagch = () => {
+  useEffect(() => {
     if (win == 1) {
       console.log("blue win");
     } else if (win == 2) {
       console.log("red win");
     }
-  };
+  }, [win]);
 
-  const checker = () => {
+  useEffect(() => {
     for (let i = 0; i < conditionWin.length; i++) {
       const [a, b, c] = conditionWin[i];
       if (arr[a] == 1 && arr[b] == 1 && arr[c] == 1) {
@@ -39,10 +39,10 @@ export default function Home() {
         return;
       }
     }
-  };
+  }, [arr]);
 
   const budagch = (llr) => {
-    if (arr[llr] !== 0 || win !== 0) return;
+    if (arr[llr] !== 0 || win !== 0 || !arr.includes(0)) return;
     if (turn === 1) {
       setTurn(2);
       const newArr = arr.map((el, i) => (llr === i ? 1 : el));
@@ -53,39 +53,27 @@ export default function Home() {
       setArr(newArr);
     }
   };
-  // const clickTotal = (llr) => {
 
-  //   if (turn === 1) {
-  //     setTurn(2);
-  //     const newArr = arr.map((el, i) => (llr === i ? 1 : el));
-  //     setArr(newArr);
-  //   } else {
-  //     setTurn(1);
-  //     const newArr = arr.map((el, i) => (llr === i ? 2 : el));
-  //     setArr(newArr);
-  //   }
-
-  //   for (let i = 0; i < conditionWin.length; i++) {
-  //     const [a, b, c] = conditionWin[i];
-  //     if (arr[a] == 1 && arr[b] == 1 && arr[c] == 1) {
-  //       setWin(1);
-  //     }
-  //     if (arr[a] == 2 && arr[b] == 2 && arr[c] == 2) {
-  //       setWin(2);
-  //     }
-  //   }
-
-  //   if (win == 1) {
-  //     console.log("blue win");
-  //     return;
-  //   } else if (win == 2) {
-  //     console.log("red win");
-  //     return;
-  //   }
-  // };
-
+  const restart = () => {
+    if (win == 1 || win == 2 || !arr.includes(0)) {
+      setTurn(1);
+      setWin(0);
+      setArr([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    } else {
+      setTurn(turn);
+      setWin(win);
+      setArr(arr);
+    }
+  };
+  const declare = () => {
+    if (win == 1) return "Blue wins";
+    if (win == 2) return "Red wins";
+    if (!arr.includes(0)) return "Tie";
+    return "";
+  };
   return (
     <div className="h-screen w-screen flex justify-center items-center flex-col gap-3">
+      <h1>{declare()}</h1>
       <div className="h-[150px] w-[150px] border border-black flex flex-wrap justify-center items-center">
         {arr.map((ele, i) => {
           return (
@@ -95,15 +83,15 @@ export default function Home() {
                 ele == 1 ? "bg-blue-500" : ele == 2 ? "bg-red-500" : "bg-white"
               }`}
               onClick={() => {
-                ashiglagch();
                 budagch(i);
-                checker();
               }}
             ></div>
           );
         })}
       </div>
-      <Button variant="outline">Restart</Button>
+      <Button variant="outline" onClick={restart}>
+        Restart
+      </Button>
     </div>
   );
 }
