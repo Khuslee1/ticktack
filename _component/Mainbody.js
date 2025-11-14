@@ -1,0 +1,72 @@
+"use client";
+import { HiArrowSmRight } from "react-icons/hi";
+import { Button } from "@/components/ui/button";
+import { GoStarFill } from "react-icons/go";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+const type = ["Upcoming", "Popular", "Top Rated"];
+const movie = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+const mockCarouselData = [
+  {
+    img: "",
+    tittle: "",
+    description: "",
+    rate: 3,
+  },
+];
+
+export const Mainbody = () => {
+  return type.map((ele, i) => {
+    return (
+      <div
+        key={i}
+        className="w-screen pl-20 pr-20 pt-20 flex flex-col items-center"
+      >
+        <div className="flex justify-between items-center w-[1277px]">
+          <h1 className="font-sans text-[32px] font-semibold">{ele}</h1>
+          <Button
+            variant={`outline`}
+            className={`border-none flex gap-2 shadow-none`}
+          >
+            <span className="font-semibold text-[14px] font-sans">
+              See More
+            </span>
+            <HiArrowSmRight className="w-4 h-4" />
+          </Button>
+        </div>
+        <div className="w-[1277px] h-[910px] flex gap-8 flex-wrap py-10">
+          {movie.map((ele) => {
+            return (
+              <Card className={`h-[439px] w-[229px] pt-0`}>
+                <CardHeader
+                  className={`h-[340] w-full rounded-t-lg p-0`}
+                ></CardHeader>
+                <CardFooter className={`flex-col flex gap-0.5`}>
+                  <div className="w-full flex items-center">
+                    {" "}
+                    <GoStarFill className="text-[#FDE047]" />{" "}
+                    <p className="font-semibold text-[14px]">{ele}</p>
+                    <p className="text-[12px] text-gray-500">/10</p>
+                  </div>
+
+                  <p className="text-[#09090B] font-sans text-[18px] font-normal w-full">
+                    Card Footer
+                  </p>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    );
+  });
+};
