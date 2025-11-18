@@ -3,9 +3,25 @@ import { HiArrowSmRight } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { GoStarFill } from "react-icons/go";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-const type = ["Upcoming", "Popular", "Top Rated"];
-const movie = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const type: string[] = ["Upcoming", "Popular", "Top Rated"];
+// const categories = [
+//   {
+//     title: "Upcoming",
+//     path: "upcoming",
+//   },
+//   {
+//     title: "Popular",
+//     path: "Popular",
+//   },
+//   {
+//     title: "Top-rated",
+//     path: "Top_rated",
+//   },
+// ];
+const movie: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // const mockCarouselData = [
 //   [
@@ -197,6 +213,7 @@ const movie = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 // ];
 
 export const Mainbody = () => {
+  const router = useRouter();
   return type.map((ele, i) => {
     return (
       <div
@@ -208,6 +225,11 @@ export const Mainbody = () => {
           <Button
             variant={`outline`}
             className={`border-none flex gap-2 shadow-none`}
+            onClick={() =>
+              router.push(
+                i == 0 ? "/upcoming" : i == 1 ? "/popular" : "/topRated"
+              )
+            }
           >
             <span className="font-semibold text-[14px] font-sans">
               See More

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import * as React from "react";
 import { Footer } from "@/_component/Footer";
 import { Mainbody } from "@/_component/Mainbody";
 import { Caru } from "@/_component/Caru";

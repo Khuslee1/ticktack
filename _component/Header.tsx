@@ -14,7 +14,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-const genre = [
+  const genre:string[] = [
   "Action",
   "Adventure",
   "Animation",
@@ -45,7 +45,7 @@ const genre = [
 ];
 
 export const Header = () => {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState<boolean>(false);
 
   useEffect(() => {
     if (dark) {
@@ -71,7 +71,6 @@ export const Header = () => {
           <DropdownMenu>
             <DropdownMenuTrigger className="h-9 w-[97px] rounded-md  flex justify-center items-center gap-2">
               <div
-                variant={`outline`}
                 className="text-[14px] font-medium flex border rounded-md h-full px-3 items-center gap-1"
               >
                 {" "}

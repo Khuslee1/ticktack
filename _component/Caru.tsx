@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 
 import Autoplay from "embla-carousel-autoplay";
 import { IoPlayOutline } from "react-icons/io5";
@@ -9,14 +8,23 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  useCarousel,
 } from "@/components/ui/carousel";
 import { GoStarFill } from "react-icons/go";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bombog } from "@/_component/Bombog";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
-const CaryData = [
+type CaryDataType = {
+  id: string;
+  img: string;
+  Name: string;
+  point: number;
+  text: string;
+};
+
+const CaryData: CaryDataType[] = [
   {
     id: "asdf",
     img: "",
@@ -86,7 +94,9 @@ const CaryData = [
 ];
 
 export const Caru = () => {
-  const plugin = React.useRef(Autoplay({ delay: 2000 }));
+  const plugin = useRef(Autoplay({ delay: 2000 }));
+  const [current, setCurrent] = useState<number>(0);
+
   return (
     <div className="w-screen h-[600px] relative flex justify-center">
       <Carousel
@@ -135,8 +145,29 @@ export const Caru = () => {
         </CarouselContent>
         <CarouselPrevious className="left-10 h-10 w-10 rounded-full" />
         <CarouselNext className="right-10 h-10 w-10 rounded-full" />
-        <Bombog CaryData={CaryData} />
+        <Bombog CaryData={CaryData} current={current} />
+        <CurrentSlideDisplay setIndex={setCurrent} />
       </Carousel>
     </div>
   );
+};
+
+type CurrentSlideDisplayProps = {
+  setIndex: Dispatch<SetStateAction<number>>;
+};
+
+const CurrentSlideDisplay = ({ setIndex }: CurrentSlideDisplayProps) => {
+  const { api } = useCarousel();
+
+  useEffect(() => {
+    if (!api) return;
+
+    setIndex(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setIndex(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  return null;
 };
