@@ -15,6 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bombog } from "@/_component/Bombog";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type CaryDataType = {
   id: string;
@@ -92,10 +93,28 @@ const CaryData: CaryDataType[] = [
            reaches a crossroads.`,
   },
 ];
+const awaitData = async () => {
+  const url =
+    "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1";
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDIyZDUxNzYyYTVmNDY1MWExYzAyYTQ5MTUxZmVkZSIsIm5iZiI6MTc2MzUyMjgzOC4wOTQsInN1YiI6IjY5MWQzOTE2ZWY2YWZiYjBiYTJjOWJmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.El0MUnAv9wFdkf_9YivQxwHGj5UW1XekyNwIZVxhVEI",
+    },
+  };
+
+  fetch(url, options)
+    .then((res) => res.json())
+    .then((json) => console.log(json))
+    .catch((err) => console.error(err));
+};
 
 export const Caru = () => {
   const plugin = useRef(Autoplay({ delay: 2000 }));
   const [current, setCurrent] = useState<number>(0);
+  const router = useRouter();
 
   return (
     <div className="w-screen h-[600px] relative flex justify-center">
@@ -104,6 +123,7 @@ export const Caru = () => {
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.reset}
         className="w-full h-[600px] rounded-none justify-center flex"
+        onClick={() => router.push("/watchLater")}
       >
         <CarouselContent>
           {CaryData.map((ele, i) => (
