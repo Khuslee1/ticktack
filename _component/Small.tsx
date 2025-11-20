@@ -1,39 +1,140 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { GoStarFill } from "react-icons/go";
-type Smalltype = {
+import {
+  Dispatch,
+  SetStateAction,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+type resultObj = {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
   title: string;
-  movie: number[];
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+};
+type response = {
+  dates: { max: string; min: string };
+  page: number;
+  results: resultObj[];
+  totalPages: number;
+  totalResults: number;
+};
+type smallType = {
+  title: string;
 };
 
-export const Small = ({ title, movie }: Smalltype) => {
+export const Small = (props: smallType) => {
+  const [dataResS, setDataResS] = useState<resultObj[]>([]);
+  const [page, setPage] = useState<number>(1);
+  useEffect(() => {
+    const awaitDataS = async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/movie/${props.title}?language=en-US&page=${page}`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDIyZDUxNzYyYTVmNDY1MWExYzAyYTQ5MTUxZmVkZSIsIm5iZiI6MTc2MzUyMjgzOC4wOTQsInN1YiI6IjY5MWQzOTE2ZWY2YWZiYjBiYTJjOWJmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.El0MUnAv9wFdkf_9YivQxwHGj5UW1XekyNwIZVxhVEI",
+            },
+          }
+        );
+
+        const data = (await res.json()) as response;
+
+        setDataResS(data.results);
+      } catch (err) {
+        console.log("error");
+      }
+    };
+
+    awaitDataS();
+  }, []);
   return (
     <div className="w-screen flex flex-col items-center">
-      <div className="w-[1080px] flex flex-start">
-        <h1 className="font-sans text-[32px] font-semibold">{title}</h1>
+      <div className="w-[1277px] flex flex-start">
+        <h1 className="font-sans text-[32px] font-semibold">
+          {props.title == "upcoming"
+            ? "Upcoming"
+            : props.title == "top_rated"
+            ? "Top Rated"
+            : "Popular"}
+        </h1>
       </div>
-      <div className="w-[1080px] flex gap-8 flex-wrap py-10">
-        {movie.map((el, i) => {
+      <div className="w-[1277px] flex gap-8 flex-wrap py-10">
+        {dataResS.map((el) => {
           return (
-            <Card key={i} className={`h-[372px] w-[190px] pt-0`}>
-              <CardHeader className={`h-[281px] w-full rounded-t-lg p-0`}>
-                img tag
-              </CardHeader>
-              <CardFooter className={`flex-col flex gap-0.5`}>
+            <Card key={el.id} className={`h-[439px] w-[229px] p-0 gap-1`}>
+              <CardHeader
+                className={`h-[340px] w-full rounded-t-lg p-0 bg-center`}
+                style={{
+                  backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
+                }}
+              ></CardHeader>
+              <CardFooter className={`flex-col flex gap-0.5 px-2 pb-2`}>
                 <div className="w-full flex items-center">
                   {" "}
                   <GoStarFill className="text-[#FDE047]" />{" "}
-                  <p className="font-semibold text-[14px]">{el}</p>
+                  <p className="font-semibold text-[14px]">
+                    {Math.floor(el.vote_average * 10) / 10}
+                  </p>
                   <p className="text-[12px] text-gray-500">/10</p>
                 </div>
 
-                <p className="font-sans text-[18px] font-normal w-full">
-                  Title
+                <p className="font-sans text-[18px] font-normal w-full line-clamp-2">
+                  {el.title}
                 </p>
               </CardFooter>
             </Card>
           );
         })}
       </div>
+      <Pagination className="absolute top-[2070px] left-[475px]">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" isActive>
+              1
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">2</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">5</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 };

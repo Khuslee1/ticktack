@@ -6,222 +6,94 @@ import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const type: string[] = ["Upcoming", "Popular", "Top Rated"];
-// const categories = [
-//   {
-//     title: "Upcoming",
-//     path: "upcoming",
-//   },
-//   {
-//     title: "Popular",
-//     path: "Popular",
-//   },
-//   {
-//     title: "Top-rated",
-//     path: "Top_rated",
-//   },
-// ];
-const movie: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+type resultObj = {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+};
+type response = {
+  dates: { max: string; min: string };
+  page: number;
+  results: resultObj[];
+  totalPages: number;
+  totalResults: number;
+};
 
-// const mockCarouselData = [
-//   [
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//   ],
-//   [
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//   ],
-//   [
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//     {
-//       id: "",
-//       img: "",
-//       title: "",
-//       rate: 3,
-//     },
-//   ],
-// ];
+type typeArr = resultObj[][];
 
 export const Mainbody = () => {
   const router = useRouter();
-  return type.map((ele, i) => {
+  const [dataRes1, setDataRes1] = useState<resultObj[]>([]);
+  const [dataRes2, setDataRes2] = useState<resultObj[]>([]);
+  const [dataRes3, setDataRes3] = useState<resultObj[]>([]);
+  const [niilberArr, setNillberArr] = useState<typeArr>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const urls = [
+          "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
+          "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
+          "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
+        ];
+
+        const options = {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDIyZDUxNzYyYTVmNDY1MWExYzAyYTQ5MTUxZmVkZSIsIm5iZiI6MTc2MzUyMjgzOC4wOTQsInN1YiI6IjY5MWQzOTE2ZWY2YWZiYjBiYTJjOWJmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.El0MUnAv9wFdkf_9YivQxwHGj5UW1XekyNwIZVxhVEI",
+          },
+        };
+
+        const [res1, res2, res3] = await Promise.all([
+          fetch(urls[0], options),
+          fetch(urls[1], options),
+          fetch(urls[2], options),
+        ]);
+
+        const data1 = (await res1.json()) as response;
+        const data2 = (await res2.json()) as response;
+        const data3 = (await res3.json()) as response;
+
+        setDataRes1(data1.results);
+        setDataRes2(data2.results);
+        setDataRes3(data3.results);
+
+        setNillberArr([
+          data1.results.slice(0, 10),
+          data2.results.slice(0, 10),
+          data3.results.slice(0, 10),
+        ]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return niilberArr.map((ele, i) => {
     return (
       <div
         key={i}
         className="w-screen pl-20 pr-20 pt-20 flex flex-col items-center"
       >
         <div className="flex justify-between items-center w-[1277px]">
-          <h1 className="font-sans text-[32px] font-semibold">{ele}</h1>
+          <h1 className="font-sans text-[32px] font-semibold">
+            {i == 0 ? "Upcoming" : i == 1 ? "Popular" : "Top Rated"}
+          </h1>
           <Button
             variant={`outline`}
             className={`border-none flex gap-2 shadow-none`}
@@ -238,22 +110,30 @@ export const Mainbody = () => {
           </Button>
         </div>
         <div className="w-[1277px] h-[910px] flex gap-8 flex-wrap py-10">
-          {movie.map((el, i) => {
+          {ele.map((el, i) => {
             return (
-              <Card key={i} className={`h-[439px] w-[229px] pt-0`}>
-                <CardHeader className={`h-[340] w-full rounded-t-lg p-0`}>
-                  img tag
-                </CardHeader>
-                <CardFooter className={`flex-col flex gap-0.5`}>
+              <Card
+                key={el.id}
+                className={`h-[439px] w-[229px] gap-1 pt-0 pb-0`}
+              >
+                <CardHeader
+                  className={`h-[340px] w-full rounded-t-lg p-0 bg-center`}
+                  style={{
+                    backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
+                  }}
+                ></CardHeader>
+                <CardFooter className={`flex-col flex gap-0.5 px-2 pb-2`}>
                   <div className="w-full flex items-center">
                     {" "}
                     <GoStarFill className="text-[#FDE047]" />{" "}
-                    <p className="font-semibold text-[14px]">{el}</p>
+                    <p className="font-semibold text-[14px]">
+                      {Math.floor(el.vote_average * 10) / 10}
+                    </p>
                     <p className="text-[12px] text-gray-500">/10</p>
                   </div>
 
-                  <p className="font-sans text-[18px] font-normal w-full">
-                    Title
+                  <p className="font-sans text-[17px] font-normal w-full line-clamp-2">
+                    {el.title}
                   </p>
                 </CardFooter>
               </Card>

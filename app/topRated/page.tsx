@@ -4,13 +4,13 @@ import { Header } from "@/_component/Header";
 import { Footer } from "@/_component/Footer";
 import { Small } from "@/_component/Small";
 
-const cata = { title: "Top Rated" };
+const title: string = "top_rated";
 
 export default function Home() {
   return (
     <div className="w-screen flex flex-col gap-10">
       <Header />
-      <Small title={cata.title} />
+      <Small title={title} />
       <Footer />
     </div>
   );
