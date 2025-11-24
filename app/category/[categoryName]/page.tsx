@@ -1,16 +1,15 @@
 "use client";
-"use client";
 import { Header } from "@/_component/Header";
 import { Footer } from "@/_component/Footer";
 import { Small } from "@/_component/Small";
-
-const title: string = "top_rated";
+import { useParams } from "next/navigation";
 
 export default function Home() {
+  const params = useParams();
   return (
     <div className="w-screen flex flex-col gap-10">
       <Header />
-      <Small title={title} />
+      <Small title={params.categoryName as string} />
       <Footer />
     </div>
   );

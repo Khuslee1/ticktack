@@ -1,13 +1,6 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { GoStarFill } from "react-icons/go";
-import {
-  Dispatch,
-  SetStateAction,
-  useActionState,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -47,6 +40,7 @@ type smallType = {
 export const Small = (props: smallType) => {
   const [dataResS, setDataResS] = useState<resultObj[]>([]);
   const [page, setPage] = useState<number>(1);
+  const totalPage = 5;
   useEffect(() => {
     const awaitDataS = async () => {
       try {
@@ -71,7 +65,17 @@ export const Small = (props: smallType) => {
     };
 
     awaitDataS();
-  }, []);
+  }, [page]);
+
+  const next = () => {
+    if (page < totalPage) setPage(page + 1);
+  };
+  const prev = () => {
+    if (page > 1) setPage(page - 1);
+  };
+  const now = (ele: number) => {
+    setPage(ele);
+  };
   return (
     <div className="w-screen flex flex-col items-center">
       <div className="w-[1277px] flex flex-start">
@@ -88,9 +92,10 @@ export const Small = (props: smallType) => {
           return (
             <Card key={el.id} className={`h-[439px] w-[229px] p-0 gap-1`}>
               <CardHeader
-                className={`h-[340px] w-full rounded-t-lg p-0 bg-center`}
+                className={`h-[340px] w-full rounded-t-lg p-0 bg-cover`}
                 style={{
                   backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
+                  objectFit: "fill",
                 }}
               ></CardHeader>
               <CardFooter className={`flex-col flex gap-0.5 px-2 pb-2`}>
@@ -114,24 +119,55 @@ export const Small = (props: smallType) => {
       <Pagination className="absolute top-[2070px] left-[475px]">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" />
+            <PaginationPrevious href="#" onClick={prev} />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href="#" isActive>
+            <PaginationLink
+              href="#"
+              isActive={page == 1}
+              onClick={() => now(1)}
+            >
               1
             </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href="#">2</PaginationLink>
+            <PaginationLink
+              href="#"
+              isActive={page == 2}
+              onClick={() => now(2)}
+            >
+              2
+            </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationEllipsis />
+            <PaginationLink
+              href="#"
+              isActive={page == 3}
+              onClick={() => now(3)}
+            >
+              3
+            </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href="#">5</PaginationLink>
+            <PaginationLink
+              href="#"
+              isActive={page == 4}
+              onClick={() => now(4)}
+            >
+              4
+            </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext href="#" />
+            <PaginationLink
+              href="#"
+              isActive={page == 5}
+              onClick={() => now(5)}
+            >
+              5
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" onClick={next} />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

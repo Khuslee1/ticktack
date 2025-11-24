@@ -31,8 +31,8 @@ export const Bombog = ({ CaryData, current }: BumbugProps) => {
             key={ele.id}
             className={
               index == current
-                ? `w-2 h-2 rounded-full bg-[#940808]`
-                : `w-2 h-2 rounded-full bg-[#0d0101cc]`
+                ? `w-2 h-2 rounded-full bg-[#FFFFFF]`
+                : `w-2 h-2 rounded-full bg-[#FFFFFFCC]`
             }
           ></div>
         );

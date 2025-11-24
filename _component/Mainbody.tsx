@@ -99,7 +99,11 @@ export const Mainbody = () => {
             className={`border-none flex gap-2 shadow-none`}
             onClick={() =>
               router.push(
-                i == 0 ? "/upcoming" : i == 1 ? "/popular" : "/topRated"
+                i == 0
+                  ? "/category/upcoming"
+                  : i == 1
+                  ? "/category/popular"
+                  : "/category/top_rated"
               )
             }
           >
@@ -115,9 +119,12 @@ export const Mainbody = () => {
               <Card
                 key={el.id}
                 className={`h-[439px] w-[229px] gap-1 pt-0 pb-0`}
+                onClick={() => {
+                  router.push(`/${el.id}`);
+                }}
               >
                 <CardHeader
-                  className={`h-[340px] w-full rounded-t-lg p-0 bg-center`}
+                  className={`h-[340px] w-full rounded-t-lg p-0 bg-start bg-cover object-fill`}
                   style={{
                     backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
                   }}

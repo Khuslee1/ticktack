@@ -6,6 +6,7 @@ import { GoStarFill } from "react-icons/go";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { IoPlayOutline } from "react-icons/io5";
+import { useParams } from "next/navigation";
 
 // const cata = { title: "Upcoming" };
 type moreLikeType = { img: string; name: string; rating: number };
@@ -41,14 +42,15 @@ const Data: allDataType = {
   more: [1, 2, 3, 4, 5],
 };
 
-export default function Home() {
+export default function detailsId() {
+  const params = useParams();
   return (
     <div className="w-screen flex flex-col gap-10 items-center">
       <Header />
       <div className="w-[1080px]">
         <div className="w-full flex justify-between">
           <h1 className="flex flex-col text-[36px] font-bold">
-            {Data.name}{" "}
+            {params.id}{" "}
             <span className="text-[18px] font-normal">
               {Data.date} · PG · {Math.floor(Data.duration / 60)}h{" "}
               {Data.duration % 60}m
@@ -130,7 +132,6 @@ export default function Home() {
           </span>
         </h1>
       </div>
-      <Small title={"More like this"} movie={Data.more} />
       <Footer />
     </div>
   );

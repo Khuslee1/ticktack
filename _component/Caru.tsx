@@ -88,9 +88,10 @@ export const Caru = () => {
               <CarouselItem key={ele.id}>
                 <div className="p-1 text-black">
                   <Card
-                    className="h-[600px] rounded-none pl-[20%] bg-center bg-cover  text-white"
+                    className="h-[600px] rounded-none pl-[20%] bg-center text-white"
                     style={{
                       backgroundImage: `url("https://image.tmdb.org/t/p/original/${ele.backdrop_path}")`,
+                      objectFit: "scale-down",
                     }}
                   >
                     <CardContent className="flex aspect-square items-center p-6 w-full h-[600px] rounded-none">
