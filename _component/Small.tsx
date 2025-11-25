@@ -1,6 +1,8 @@
+"use client";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { GoStarFill } from "react-icons/go";
 import { useEffect, useState } from "react";
+
 import {
   Pagination,
   PaginationContent,
@@ -10,6 +12,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import router from "next/router";
+import Link from "next/link";
+
 type resultObj = {
   adult: boolean;
   backdrop_path: string;
@@ -90,29 +95,31 @@ export const Small = (props: smallType) => {
       <div className="w-[1277px] flex gap-8 flex-wrap py-10">
         {dataResS.map((el) => {
           return (
-            <Card key={el.id} className={`h-[439px] w-[229px] p-0 gap-1`}>
-              <CardHeader
-                className={`h-[340px] w-full rounded-t-lg p-0 bg-cover`}
-                style={{
-                  backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
-                  objectFit: "fill",
-                }}
-              ></CardHeader>
-              <CardFooter className={`flex-col flex gap-0.5 px-2 pb-2`}>
-                <div className="w-full flex items-center">
-                  {" "}
-                  <GoStarFill className="text-[#FDE047]" />{" "}
-                  <p className="font-semibold text-[14px]">
-                    {Math.floor(el.vote_average * 10) / 10}
-                  </p>
-                  <p className="text-[12px] text-gray-500">/10</p>
-                </div>
+            <Link key={el.id} href={`/${el.id}`}>
+              <Card className={`h-[439px] w-[229px] p-0 gap-1`}>
+                <CardHeader
+                  className={`h-[340px] w-full rounded-t-lg p-0 bg-cover`}
+                  style={{
+                    backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
+                    objectFit: "fill",
+                  }}
+                ></CardHeader>
+                <CardFooter className={`flex-col flex gap-0.5 px-2 pb-2`}>
+                  <div className="w-full flex items-center">
+                    {" "}
+                    <GoStarFill className="text-[#FDE047]" />{" "}
+                    <p className="font-semibold text-[14px]">
+                      {Math.floor(el.vote_average * 10) / 10}
+                    </p>
+                    <p className="text-[12px] text-gray-500">/10</p>
+                  </div>
 
-                <p className="font-sans text-[18px] font-normal w-full line-clamp-2">
-                  {el.title}
-                </p>
-              </CardFooter>
-            </Card>
+                  <p className="font-sans text-[18px] font-normal w-full line-clamp-2">
+                    {el.title}
+                  </p>
+                </CardFooter>
+              </Card>
+            </Link>
           );
         })}
       </div>
