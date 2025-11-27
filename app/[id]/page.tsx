@@ -6,14 +6,17 @@ import { Button } from "@/components/ui/button";
 import { IoPlayOutline } from "react-icons/io5";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { HiArrowSmRight } from "react-icons/hi";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import router from "next/router";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type genre = {
   id: number;
@@ -96,6 +99,29 @@ type video = {
   id: number;
   results: vidObj[];
 };
+type resultObj = {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+};
+type responsSim = {
+  dates: { max: string; min: string };
+  page: number;
+  results: resultObj[];
+  totalPages: number;
+  totalResults: number;
+};
 
 export default function detailsId() {
   const params = useParams();
@@ -104,6 +130,9 @@ export default function detailsId() {
   const [dataDir, setDataDir] = useState<credit[]>();
   const [dataWri, setDataWri] = useState<credit[]>();
   const [dataKey, setDataKey] = useState<string>("");
+  const [dataSim, setDataSim] = useState<resultObj[]>();
+  const [isDone, setIsdone] = useState<boolean>(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (!params.id) return;
@@ -142,12 +171,25 @@ export default function detailsId() {
             },
           }
         );
-
+        const resSim = await fetch(
+          `https://api.themoviedb.org/3/movie/${params.id}/similar?language=en-US&page=1`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDIyZDUxNzYyYTVmNDY1MWExYzAyYTQ5MTUxZmVkZSIsIm5iZiI6MTc2MzUyMjgzOC4wOTQsInN1YiI6IjY5MWQzOTE2ZWY2YWZiYjBiYTJjOWJmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.El0MUnAv9wFdkf_9YivQxwHGj5UW1XekyNwIZVxhVEI",
+            },
+          }
+        );
+        const dataSimilar = (await resSim.json()) as responsSim;
         const dataVideo = (await resVid.json()) as video;
-        console.log(dataVideo);
         const dataCredit = (await resCre.json()) as creditObj;
         const data = (await res.json()) as response;
-        const videoKey = dataVideo.results[dataVideo.results.length - 1].key;
+        const resultSim = dataSimilar.results;
+        const videoKey = dataVideo.results.filter(
+          (el) => el.type == "Trailer"
+        )[0].key;
         const filteredCast = dataCredit.cast
           .sort((a, b) => b.popularity - a.popularity)
           .filter((ele, i) => {
@@ -174,11 +216,13 @@ export default function detailsId() {
             if (i == 0 || i == 1 || i == 2) return true;
             return false;
           });
+        setIsdone(false);
         setDataKey(videoKey);
         setDataCast(filteredCast);
         setDataDir(filteredDir);
         setDataWri(filteredWri);
         setDataRes(data);
+        setDataSim(resultSim.slice(1, 6));
       } catch (err) {
         console.log("error");
       }
@@ -187,6 +231,67 @@ export default function detailsId() {
     awaitData();
   }, [params.id]);
 
+  if (isDone) {
+    return (
+      <div className="w-screen flex flex-col gap-10 items-center">
+        <Header />
+        <div className="w-[1080px]">
+          <div className="w-full flex justify-between">
+            <div className="flex flex-col gap-1">
+              <Skeleton className="h-10 w-[411px] rounded-full" />
+              <Skeleton className="h-10 w-[411px] rounded-full" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <p className="text-[12px] font-medium">Rating</p>
+              <div className="w-full flex flex-col items-center gap-1">
+                <Skeleton className="w-[83px] h-5" />
+                <Skeleton className="w-[83px] h-5" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-[1080px] h-[428px] flex gap-8">
+          <Skeleton className="w-[290px] h-[428px]" />
+          <Skeleton className="w-[760px] h-[428px]" />
+        </div>
+        <div className="flex flex-col gap-2 w-[1080px]">
+          <div className="flex gap-3">
+            <Skeleton className="w-[77px] h-5 rounded-full" />
+            <Skeleton className="w-[77px] h-5 rounded-full" />
+            <Skeleton className="w-[77px] h-5 rounded-full" />
+          </div>
+          <Skeleton className="w-[1080px] h-5 rounded-full" />
+          <Skeleton className="w-[580px] h-5 rounded-full" />
+          <div className="flex gap-15">
+            <Skeleton className="w-[77px] h-5 rounded-full" />
+            <Skeleton className="w-[137px] h-5 rounded-full" />
+          </div>
+          <div className="flex gap-15">
+            <Skeleton className="w-[77px] h-5 rounded-full" />
+            <Skeleton className="w-[137px] h-5 rounded-full" />
+          </div>
+          <div className="flex gap-15">
+            <Skeleton className="w-[77px] h-5 rounded-full" />
+            <Skeleton className="w-[137px] h-5 rounded-full" />
+          </div>
+        </div>
+        <div className="w-screen flex flex-col items-center">
+          <div className="flex justify-between items-center w-[1080px]">
+            <Skeleton className="w-[250px] h-8 rounded-full" />
+            <Skeleton className="w-[165px] h-8 rounded-full" />
+          </div>
+          <div className="w-[1080px] flex gap-8 flex-wrap py-10">
+            <Skeleton className="w-[190px] h-[372px] rounded-lg" />
+            <Skeleton className="w-[190px] h-[372px] rounded-lg" />
+            <Skeleton className="w-[190px] h-[372px] rounded-lg" />
+            <Skeleton className="w-[190px] h-[372px] rounded-lg" />
+            <Skeleton className="w-[190px] h-[372px] rounded-lg" />
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
   return (
     <Dialog>
       <div className="w-screen flex flex-col gap-10 items-center">
@@ -299,10 +404,61 @@ export default function detailsId() {
             </span>
           </h1>
         </div>
+        <div className="w-screen pl-20 pr-20 pt-20 flex flex-col items-center">
+          <div className="flex justify-between items-center w-[1080px]">
+            <h1 className="font-sans text-[24px] font-semibold">
+              More like this
+            </h1>
+            <Button
+              variant={`outline`}
+              className={`border-none flex gap-2 shadow-none`}
+              onClick={() => router.push(`/category/${params.id}`)}
+            >
+              <span className="font-semibold text-[14px] font-sans">
+                See More
+              </span>
+              <HiArrowSmRight className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="w-[1080px] flex gap-8 flex-wrap py-10">
+            {dataSim?.map((el, i) => {
+              return (
+                <Card
+                  key={el.id}
+                  className={`h-[372px] w-[190px] gap-1 pt-0 pb-0`}
+                  onClick={() => {
+                    router.push(`/${el.id}`);
+                  }}
+                >
+                  <CardHeader
+                    className={`h-[281px] w-full rounded-t-lg p-0 bg-start bg-cover object-fill`}
+                    style={{
+                      backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
+                    }}
+                  ></CardHeader>
+                  <CardFooter className={`flex-col flex gap-0.5 px-2 pb-2`}>
+                    <div className="w-full flex items-center">
+                      {" "}
+                      <GoStarFill className="text-[#FDE047]" />{" "}
+                      <p className="font-semibold text-[14px]">
+                        {Math.floor(el.vote_average * 10) / 10}
+                      </p>
+                      <p className="text-[12px] text-gray-500">/10</p>
+                    </div>
+
+                    <p className="font-sans text-[17px] font-normal w-full line-clamp-2">
+                      {el.title}
+                    </p>
+                  </CardFooter>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
         <Footer />
       </div>
       <DialogTitle>Trailer for {dataRes?.title}</DialogTitle>
-      <DialogContent className="w-[997px] h-[561px] p-0 overflow-hidden">
+      <DialogContent className="min-w-[997px] h-[561px] p-0 overflow-hidden">
         <iframe
           className="w-full h-full"
           src={`https://www.youtube.com/embed/${dataKey}`}

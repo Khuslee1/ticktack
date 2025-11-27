@@ -5,6 +5,7 @@ import { GoStarFill } from "react-icons/go";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type resultObj = {
   adult: boolean;
@@ -34,13 +35,19 @@ type typeArr = resultObj[][];
 
 export const Mainbody = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const [dataRes1, setDataRes1] = useState<resultObj[]>([]);
   const [dataRes2, setDataRes2] = useState<resultObj[]>([]);
   const [dataRes3, setDataRes3] = useState<resultObj[]>([]);
   const [niilberArr, setNillberArr] = useState<typeArr>([]);
-
+  const skeletonArr: number[][] = [
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  ];
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const urls = [
           "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
@@ -76,6 +83,8 @@ export const Mainbody = () => {
           data2.results.slice(0, 10),
           data3.results.slice(0, 10),
         ]);
+
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -83,6 +92,31 @@ export const Mainbody = () => {
 
     fetchData();
   }, []);
+
+  if (isLoading)
+    return skeletonArr.map((ele, i) => {
+      return (
+        <div
+          key={i}
+          className="w-screen pl-20 pr-20 pt-20 flex flex-col items-center"
+        >
+          <div className="flex justify-between items-center w-[1277px]">
+            <Skeleton className="w-[250px] h-8 rounded-full" />
+            <Skeleton className={`w-[165px] h-8 rounded-full`} />
+          </div>
+          <div className="w-[1277px] h-[910px] flex gap-8 flex-wrap py-10">
+            {ele.map((el, inde) => {
+              return (
+                <Skeleton
+                  key={inde}
+                  className="h-[439px] w-[229px] rounded-lg"
+                />
+              );
+            })}
+          </div>
+        </div>
+      );
+    });
 
   return niilberArr.map((ele, i) => {
     return (

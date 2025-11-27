@@ -46,20 +46,26 @@ export const Small = (props: smallType) => {
   const [dataResS, setDataResS] = useState<resultObj[]>([]);
   const [page, setPage] = useState<number>(1);
   const totalPage = 5;
+  const linkDec = () => {
+    if (
+      props.title == "upcoming" ||
+      props.title == "top_rated" ||
+      props.title == "popular"
+    )
+      return `https://api.themoviedb.org/3/movie/${props.title}?language=en-US&page=${page}`;
+    return `https://api.themoviedb.org/3/movie/${props.title}/similar?language=en-US&page=${page}`;
+  };
   useEffect(() => {
     const awaitDataS = async () => {
       try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/movie/${props.title}?language=en-US&page=${page}`,
-          {
-            method: "GET",
-            headers: {
-              accept: "application/json",
-              Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDIyZDUxNzYyYTVmNDY1MWExYzAyYTQ5MTUxZmVkZSIsIm5iZiI6MTc2MzUyMjgzOC4wOTQsInN1YiI6IjY5MWQzOTE2ZWY2YWZiYjBiYTJjOWJmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.El0MUnAv9wFdkf_9YivQxwHGj5UW1XekyNwIZVxhVEI",
-            },
-          }
-        );
+        const res = await fetch(linkDec(), {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDIyZDUxNzYyYTVmNDY1MWExYzAyYTQ5MTUxZmVkZSIsIm5iZiI6MTc2MzUyMjgzOC4wOTQsInN1YiI6IjY5MWQzOTE2ZWY2YWZiYjBiYTJjOWJmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.El0MUnAv9wFdkf_9YivQxwHGj5UW1XekyNwIZVxhVEI",
+          },
+        });
 
         const data = (await res.json()) as response;
 
@@ -89,7 +95,9 @@ export const Small = (props: smallType) => {
             ? "Upcoming"
             : props.title == "top_rated"
             ? "Top Rated"
-            : "Popular"}
+            : props.title == "popular"
+            ? "Popular"
+            : "More like this"}
         </h1>
       </div>
       <div className="w-[1277px] flex gap-8 flex-wrap py-10">
