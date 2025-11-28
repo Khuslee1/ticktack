@@ -1,26 +1,6 @@
 "use client";
 import * as React from "react";
-type CaryDataType = {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-};
-
-type BumbugProps = {
-  CaryData: CaryDataType[];
-  current: number;
-};
+import { CaryDataType, BumbugProps } from "@/_type/types";
 
 export const Bombog = ({ CaryData, current }: BumbugProps) => {
   return (

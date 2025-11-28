@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { HiChevronDown } from "react-icons/hi";
@@ -8,44 +7,42 @@ import { HiChevronRight } from "react-icons/hi";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoMoonOutline } from "react-icons/io5";
 import { TbMovie } from "react-icons/tb";
+import { genreObj } from "@/_type/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-  const genre:string[] = [
-  "Action",
-  "Adventure",
-  "Animation",
-  "Biography",
-  "Comedy",
-  "Crime",
-  "Documentary",
-  "Drama",
-  "Family",
-  "Fantasy",
-  "Film-Noir",
-  "Game-Show",
-  "History",
-  "Horror",
-  "Music",
-  "Musical",
-  "Mystery",
-  "News",
-  "Reality-TV",
-  "Romance",
-  "Sci-Fi",
-  "Short",
-  "Sport",
-  "Talk-Show",
-  "Thriller",
-  "War",
-  "Western",
-];
 
 export const Header = () => {
   const [dark, setDark] = useState<boolean>(false);
+  const [dataRes, setDataRes] = useState<genreObj>();
+  const [genreId, setGenreid] = useState<number>();
+  useEffect(() => {
+    const awaitData = async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/genre/movie/list?language=en`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.TMDB_TOKEN_KEY}`,
+            },
+          }
+        );
+
+        const data = (await res.json()) as genreObj;
+        setDataRes(data);
+        console.log(data);
+      } catch (err) {
+        console.log("error");
+      }
+    };
+
+    awaitData();
+  }, []);
 
   useEffect(() => {
     if (dark) {
@@ -70,9 +67,7 @@ export const Header = () => {
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger className="h-9 w-[97px] rounded-md  flex justify-center items-center gap-2">
-              <div
-                className="text-[14px] font-medium flex border rounded-md h-full px-3 items-center gap-1"
-              >
+              <div className="text-[14px] font-medium flex border rounded-md h-full px-3 items-center gap-1">
                 {" "}
                 <HiChevronDown className="size-4" />
                 Genre
@@ -88,11 +83,20 @@ export const Header = () => {
                 </DropdownMenuLabel>
               </div>
               <div className="flex gap-4 flex-wrap w-[537px] pt-4 border-t">
-                {genre.map((ele, i) => {
+                {dataRes?.genres.map((ele) => {
                   return (
-                    <Button key={i} variant="outline" className={`h-5 p-0.5`}>
+                    <Button
+                      key={ele.id}
+                      variant="outline"
+                      className={`h-5 p-0.5`}
+                      onClick={() => {
+                        setGenreid(ele.id);
+                      }}
+                    >
                       {" "}
-                      <span className="text-[14px]  font-medium">{ele}</span>
+                      <span className="text-[14px]  font-medium">
+                        {ele.name}
+                      </span>
                       <HiChevronRight className="size-4" />
                     </Button>
                   );

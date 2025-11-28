@@ -50,17 +50,16 @@ export const Mainbody = () => {
       setIsLoading(true);
       try {
         const urls = [
-          "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
-          "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
-          "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
+          `${process.env.NEXT_PUBLIC_BASE_URL}upcoming?language=en-US&page=1`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}popular?language=en-US&page=1`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}top_rated?language=en-US&page=1`,
         ];
 
         const options = {
           method: "GET",
           headers: {
             accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDIyZDUxNzYyYTVmNDY1MWExYzAyYTQ5MTUxZmVkZSIsIm5iZiI6MTc2MzUyMjgzOC4wOTQsInN1YiI6IjY5MWQzOTE2ZWY2YWZiYjBiYTJjOWJmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.El0MUnAv9wFdkf_9YivQxwHGj5UW1XekyNwIZVxhVEI",
+            Authorization: `Bearer ${process.env.TMDB_TOKEN_KEY}`,
           },
         };
 
@@ -160,7 +159,7 @@ export const Mainbody = () => {
                 <CardHeader
                   className={`h-[340px] w-full rounded-t-lg p-0 bg-start bg-cover object-fill`}
                   style={{
-                    backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
+                    backgroundImage: `url(${process.env.NEXT_PUBLIC_SMALL_IMAGE_URL}${el.poster_path})`,
                   }}
                 ></CardHeader>
                 <CardFooter className={`flex-col flex gap-0.5 px-2 pb-2`}>

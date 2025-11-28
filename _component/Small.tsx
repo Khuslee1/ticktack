@@ -12,35 +12,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { resultObj, responsetit, smallType } from "@/_type/types";
 import router from "next/router";
 import Link from "next/link";
-
-type resultObj = {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-};
-type response = {
-  dates: { max: string; min: string };
-  page: number;
-  results: resultObj[];
-  totalPages: number;
-  totalResults: number;
-};
-type smallType = {
-  title: string;
-};
 
 export const Small = (props: smallType) => {
   const [dataResS, setDataResS] = useState<resultObj[]>([]);
@@ -52,8 +26,8 @@ export const Small = (props: smallType) => {
       props.title == "top_rated" ||
       props.title == "popular"
     )
-      return `https://api.themoviedb.org/3/movie/${props.title}?language=en-US&page=${page}`;
-    return `https://api.themoviedb.org/3/movie/${props.title}/similar?language=en-US&page=${page}`;
+      return `${process.env.NEXT_PUBLIC_BASE_URL}${props.title}?language=en-US&page=${page}`;
+    return `${process.env.NEXT_PUBLIC_BASE_URL}${props.title}/similar?language=en-US&page=${page}`;
   };
   useEffect(() => {
     const awaitDataS = async () => {
@@ -62,12 +36,11 @@ export const Small = (props: smallType) => {
           method: "GET",
           headers: {
             accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDIyZDUxNzYyYTVmNDY1MWExYzAyYTQ5MTUxZmVkZSIsIm5iZiI6MTc2MzUyMjgzOC4wOTQsInN1YiI6IjY5MWQzOTE2ZWY2YWZiYjBiYTJjOWJmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.El0MUnAv9wFdkf_9YivQxwHGj5UW1XekyNwIZVxhVEI",
+            Authorization: `Bearer ${process.env.TMDB_TOKEN_KEY}`,
           },
         });
 
-        const data = (await res.json()) as response;
+        const data = (await res.json()) as responsetit;
 
         setDataResS(data.results);
       } catch (err) {
@@ -108,7 +81,7 @@ export const Small = (props: smallType) => {
                 <CardHeader
                   className={`h-[340px] w-full rounded-t-lg p-0 bg-cover`}
                   style={{
-                    backgroundImage: `url(https://image.tmdb.org/t/p/w500/${el.poster_path})`,
+                    backgroundImage: `url(${process.env.NEXT_PUBLIC_SMALL_IMAGE_URL}${el.poster_path})`,
                     objectFit: "fill",
                   }}
                 ></CardHeader>
