@@ -5,7 +5,7 @@ import { GoStarFill } from "react-icons/go";
 import { Button } from "@/components/ui/button";
 import { IoPlayOutline } from "react-icons/io5";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { HiArrowSmRight } from "react-icons/hi";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
@@ -16,6 +16,7 @@ import {
   video,
   resultObj,
   responsSim,
+  genreObj,
 } from "@/_type/types";
 import {
   Dialog,
@@ -133,7 +134,13 @@ export default function detailsId() {
   if (isDone) {
     return (
       <div className="w-screen flex flex-col gap-10 items-center">
-        <Header />
+        <Header
+          setGenreObj={function (
+            value: SetStateAction<genreObj | undefined>
+          ): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
         <div className="w-[1080px]">
           <div className="w-full flex justify-between">
             <div className="flex flex-col gap-1">
@@ -194,7 +201,13 @@ export default function detailsId() {
   return (
     <Dialog>
       <div className="w-screen flex flex-col gap-10 items-center">
-        <Header />
+        <Header
+          setGenreObj={function (
+            value: SetStateAction<genreObj | undefined>
+          ): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
         <div className="w-[1080px]">
           <div className="w-full flex justify-between">
             <h1 className="flex flex-col text-[36px] font-bold">

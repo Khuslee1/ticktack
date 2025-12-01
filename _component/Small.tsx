@@ -13,7 +13,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { resultObj, responsetit, smallType } from "@/_type/types";
-import router from "next/router";
 import Link from "next/link";
 
 export const Small = (props: smallType) => {

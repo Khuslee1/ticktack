@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { HiChevronDown } from "react-icons/hi";
@@ -8,17 +8,21 @@ import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoMoonOutline } from "react-icons/io5";
 import { TbMovie } from "react-icons/tb";
 import { genreObj } from "@/_type/types";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+type setGenreType = {
+  setGenreObj: Dispatch<SetStateAction<genreObj | undefined>>;
+};
 
-export const Header = () => {
+export const Header = ({ setGenreObj }: setGenreType) => {
   const [dark, setDark] = useState<boolean>(false);
   const [dataRes, setDataRes] = useState<genreObj>();
-  const [genreId, setGenreid] = useState<number>();
+  const router = useRouter();
   useEffect(() => {
     const awaitData = async () => {
       try {
@@ -35,7 +39,7 @@ export const Header = () => {
 
         const data = (await res.json()) as genreObj;
         setDataRes(data);
-        console.log(data);
+        setGenreObj(data);
       } catch (err) {
         console.log("error");
       }
@@ -90,7 +94,7 @@ export const Header = () => {
                       variant="outline"
                       className={`h-5 p-0.5`}
                       onClick={() => {
-                        setGenreid(ele.id);
+                        router.push(`/genre/${ele.id}`);
                       }}
                     >
                       {" "}
