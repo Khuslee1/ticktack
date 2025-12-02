@@ -9,6 +9,7 @@ import { IoMoonOutline } from "react-icons/io5";
 import { TbMovie } from "react-icons/tb";
 import { genreObj } from "@/_type/types";
 import { useRouter } from "next/navigation";
+import { SearchDropdown } from "@/_component/SearchDropdown";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +23,7 @@ type setGenreType = {
 export const Header = ({ setGenreObj }: setGenreType) => {
   const [dark, setDark] = useState<boolean>(false);
   const [dataRes, setDataRes] = useState<genreObj>();
+  const [value, setValue] = useState<string>();
   const router = useRouter();
   useEffect(() => {
     const awaitData = async () => {
@@ -108,12 +110,9 @@ export const Header = ({ setGenreObj }: setGenreType) => {
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
+
           <div className="relative w-[379px] h-9">
-            <HiMagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 size-4" />
-            <Input
-              placeholder={`Search..`}
-              className="w-[379px] h-9 pl-9 pr-3"
-            />
+            <SearchDropdown />
           </div>
         </div>
         <Button

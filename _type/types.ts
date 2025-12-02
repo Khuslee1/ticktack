@@ -170,3 +170,4 @@ export type genreMov = {
       vote_average: number,
       vote_count: number
 }
+
