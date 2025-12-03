@@ -23,6 +23,7 @@ export const Header = ({ setGenreObj }: setGenreType) => {
   const [dataRes, setDataRes] = useState<genreObj>();
   const router = useRouter();
   const params = useParams();
+  const idArr = (params.genreId ?? "").split("%2C");
   useEffect(() => {
     const awaitData = async () => {
       try {
@@ -97,7 +98,11 @@ export const Header = ({ setGenreObj }: setGenreType) => {
                     <Button
                       key={ele.id}
                       variant="outline"
-                      className={`h-5 p-0.5`}
+                      className={
+                        idArr.includes(String(ele.id))
+                          ? "h-5 p-0.5 bg-black text-white"
+                          : "h-5 p-0.5"
+                      }
                       onClick={() => {
                         router.push(`/genre/${ele.id}`);
                       }}
