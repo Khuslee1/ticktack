@@ -7,6 +7,7 @@ import { HiChevronRight } from "react-icons/hi";
 import Link from "next/link";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { GoStarFill } from "react-icons/go";
+import { PaginationI } from "@/_component/PaginationI";
 
 type GenrePageType = {
   searchVal: string;
@@ -16,12 +17,14 @@ type GenrePageType = {
 export const SearchPage = ({ searchVal, genreObject }: GenrePageType) => {
   const [dataRes, setDataRes] = useState<genreMovie>();
   const router = useRouter();
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(3);
 
   useEffect(() => {
     const awaitData = async () => {
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/search/movie?query=${searchVal}&language=en-US&page=1`,
+          `https://api.themoviedb.org/3/search/movie?query=${searchVal}&language=en-US&page=${page}`,
           {
             method: "GET",
             headers: {
@@ -34,13 +37,14 @@ export const SearchPage = ({ searchVal, genreObject }: GenrePageType) => {
         const data = (await res.json()) as genreMovie;
         console.log(data);
         setDataRes(data);
+        setTotal(data.total_pages);
       } catch (err) {
         console.log("error");
       }
     };
 
     awaitData();
-  }, [searchVal]);
+  }, [searchVal, page]);
   return (
     <div className="w-screen  flex flex-col gap-8 items-center">
       <h1 className="w-7xl font-sans text-[#09090B] text-[30px] font-semibold">
@@ -81,6 +85,7 @@ export const SearchPage = ({ searchVal, genreObject }: GenrePageType) => {
                 </Link>
               );
             })}
+            <PaginationI total={total} setPage={setPage} page={page} />
           </div>
         </div>
         <div className="w-[387px] border-l border-l-[#E4E4E7] pl-5">

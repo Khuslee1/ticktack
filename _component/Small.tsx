@@ -2,23 +2,15 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { GoStarFill } from "react-icons/go";
 import { useEffect, useState } from "react";
+import { PaginationI } from "@/_component/PaginationI";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { resultObj, responsetit, smallType } from "@/_type/types";
 import Link from "next/link";
 
 export const Small = (props: smallType) => {
   const [dataResS, setDataResS] = useState<resultObj[]>([]);
   const [page, setPage] = useState<number>(1);
-  const totalPage = 5;
+  const [total, setTotal] = useState<number>(3);
   const linkDec = () => {
     if (
       props.title == "upcoming" ||
@@ -42,6 +34,8 @@ export const Small = (props: smallType) => {
         const data = (await res.json()) as responsetit;
 
         setDataResS(data.results);
+        setTotal(data.total_pages);
+        console.log("GG", data);
       } catch (err) {
         console.log("error");
       }
@@ -50,15 +44,6 @@ export const Small = (props: smallType) => {
     awaitDataS();
   }, [page]);
 
-  const next = () => {
-    if (page < totalPage) setPage(page + 1);
-  };
-  const prev = () => {
-    if (page > 1) setPage(page - 1);
-  };
-  const now = (ele: number) => {
-    setPage(ele);
-  };
   return (
     <div className="w-screen flex flex-col items-center">
       <div className="w-[1277px] flex flex-start">
@@ -102,62 +87,8 @@ export const Small = (props: smallType) => {
             </Link>
           );
         })}
+        <PaginationI total={total} setPage={setPage} page={page} />
       </div>
-      <Pagination className="absolute top-[2070px] left-[475px]">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" onClick={prev} />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              isActive={page == 1}
-              onClick={() => now(1)}
-            >
-              1
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              isActive={page == 2}
-              onClick={() => now(2)}
-            >
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              isActive={page == 3}
-              onClick={() => now(3)}
-            >
-              3
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              isActive={page == 4}
-              onClick={() => now(4)}
-            >
-              4
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              href="#"
-              isActive={page == 5}
-              onClick={() => now(5)}
-            >
-              5
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" onClick={next} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
     </div>
   );
 };

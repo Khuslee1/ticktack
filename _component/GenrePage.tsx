@@ -7,6 +7,7 @@ import { HiChevronRight } from "react-icons/hi";
 import Link from "next/link";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { GoStarFill } from "react-icons/go";
+import { PaginationI } from "@/_component/PaginationI";
 
 type GenrePageType = {
   genreId: string[];
@@ -17,13 +18,15 @@ export const GenrePage = ({ genreId, genreObject }: GenrePageType) => {
   const [dataRes, setDataRes] = useState<genreMovie>();
   const router = useRouter();
   const [idArr, setIdarr] = useState<string[]>([...genreId]);
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(3);
 
   useEffect(() => {
     console.log(genreId);
     const awaitData = async () => {
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/discover/movie?language=en&with_genres=${genreId}&page=1`,
+          `https://api.themoviedb.org/3/discover/movie?language=en&with_genres=${genreId}&page=${page}`,
           {
             method: "GET",
             headers: {
@@ -36,13 +39,14 @@ export const GenrePage = ({ genreId, genreObject }: GenrePageType) => {
         const data = (await res.json()) as genreMovie;
         console.log(data);
         setDataRes(data);
+        setTotal(data.total_pages);
       } catch (err) {
         console.log("error");
       }
     };
 
     awaitData();
-  }, [genreId]);
+  }, [genreId, page]);
   return (
     <div className="w-screen  flex flex-col gap-8 items-center">
       <h1 className="w-7xl font-sans text-[#09090B] text-[30px] font-semibold">
@@ -61,8 +65,12 @@ export const GenrePage = ({ genreId, genreObject }: GenrePageType) => {
               return (
                 <Button
                   key={ele.id}
-                  variant="outline"
-                  className={`h-5 p-0.5`}
+                  variant={`outline`}
+                  className={
+                    idArr.includes(String(ele.id))
+                      ? "h-5 p-0.5 bg-black text-white"
+                      : "h-5 p-0.5"
+                  }
                   onClick={() => {
                     router.push(
                       `/genre/${[...idArr, String(ele.id)].join(",")}`
@@ -116,6 +124,7 @@ export const GenrePage = ({ genreId, genreObject }: GenrePageType) => {
                 </Link>
               );
             })}
+            <PaginationI total={total} setPage={setPage} page={page} />
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ export default function Home() {
     <div className="w-screen flex flex-col gap-10">
       <Header setGenreObj={setGenreobject} />
       <GenrePage
-        genreId={decodeURIComponent(params.genreId).split(",")}
+        genreId={params.genreId.split("%2C")}
         genreObject={genreObject}
       />
       <Footer />

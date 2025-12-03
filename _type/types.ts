@@ -107,8 +107,8 @@ export type responsetit = {
   dates: { max: string; min: string };
   page: number;
   results: resultObj[];
-  totalPages: number;
-  totalResults: number;
+  total_pages: number;
+  total_results: number;
 };
 
 export type smallType = {
@@ -171,3 +171,8 @@ export type genreMov = {
       vote_count: number
 }
 
+export type pageType = {
+  page: number;
+  total: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+};

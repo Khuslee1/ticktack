@@ -92,30 +92,21 @@ export default function detailsId() {
         )[0].key;
         const filteredCast = dataCredit.cast
           .sort((a, b) => b.popularity - a.popularity)
-          .filter((ele, i) => {
-            if (i == 0 || i == 1 || i == 2) return true;
-            return false;
-          });
+          .slice(0, 3);
         const filteredDir = dataCredit.crew
           .filter((ele) => {
             if (ele.known_for_department == "Directing") return true;
             return false;
           })
           .sort((a, b) => b.popularity - a.popularity)
-          .filter((ele, i) => {
-            if (i == 0 || i == 1 || i == 2) return true;
-            return false;
-          });
+          .slice(0, 3);
         const filteredWri = dataCredit.crew
           .filter((ele) => {
             if (ele.known_for_department == "Writing") return true;
             return false;
           })
           .sort((a, b) => b.popularity - a.popularity)
-          .filter((ele, i) => {
-            if (i == 0 || i == 1 || i == 2) return true;
-            return false;
-          });
+          .slice(0, 3);
         setIsdone(false);
         setDataKey(videoKey);
         setDataCast(filteredCast);

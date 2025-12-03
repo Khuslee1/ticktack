@@ -1,14 +1,12 @@
 "use client";
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { HiChevronDown } from "react-icons/hi";
 import { HiChevronRight } from "react-icons/hi";
-import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoMoonOutline } from "react-icons/io5";
 import { TbMovie } from "react-icons/tb";
 import { genreObj } from "@/_type/types";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { SearchDropdown } from "@/_component/SearchDropdown";
 import {
   DropdownMenu,
@@ -23,8 +21,8 @@ type setGenreType = {
 export const Header = ({ setGenreObj }: setGenreType) => {
   const [dark, setDark] = useState<boolean>(false);
   const [dataRes, setDataRes] = useState<genreObj>();
-  const [value, setValue] = useState<string>();
   const router = useRouter();
+  const params = useParams();
   useEffect(() => {
     const awaitData = async () => {
       try {
@@ -64,7 +62,12 @@ export const Header = ({ setGenreObj }: setGenreType) => {
       }`}
     >
       <div className="w-7xl h-9 flex justify-between">
-        <div className="flex gap-2 items-center">
+        <div
+          className="flex gap-2 items-center"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
           <TbMovie className="w-5 h-5 text-[#4338CA] " />
           <p className="text-4 font-sans text-[#4338CA] font-bold italic">
             Movie Z
