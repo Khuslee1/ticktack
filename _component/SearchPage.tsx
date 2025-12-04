@@ -1,26 +1,31 @@
 "use client";
 import { useEffect, useState } from "react";
-import { genreMovie, genreMov, genreObj } from "@/_type/types";
-import { Button } from "@/components/ui/button";
+import { genreMovie, genreObj } from "@/_type/types";
 import { useRouter } from "next/navigation";
-import { HiChevronRight } from "react-icons/hi";
+import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { GoStarFill } from "react-icons/go";
 import { PaginationI } from "@/_component/PaginationI";
+import { GenreButton } from "./GenreButton";
 
 type GenrePageType = {
   searchVal: string;
-  genreObject?: genreObj;
 };
 
-export const SearchPage = ({ searchVal, genreObject }: GenrePageType) => {
+export const SearchPage = ({ searchVal }: GenrePageType) => {
   const [dataRes, setDataRes] = useState<genreMovie>();
   const router = useRouter();
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(3);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [object, setObject] = useState<genreObj>();
+  const skelArr = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+  ];
 
   useEffect(() => {
+    setLoading(true);
     const awaitData = async () => {
       try {
         const res = await fetch(
@@ -38,6 +43,7 @@ export const SearchPage = ({ searchVal, genreObject }: GenrePageType) => {
         console.log(data);
         setDataRes(data);
         setTotal(data.total_pages);
+        setLoading(false);
       } catch (err) {
         console.log("error");
       }
@@ -45,6 +51,38 @@ export const SearchPage = ({ searchVal, genreObject }: GenrePageType) => {
 
     awaitData();
   }, [searchVal, page]);
+  if (loading) {
+    return (
+      <div className="w-screen  flex flex-col gap-8 items-center">
+        <div className="w-7xl flex ">
+          <div className="flex flex-col gap-8 w-[826px] ">
+            <Skeleton className="w-[200px] h-[45px] rounded-full" />
+            <div className="w-full flex flex-wrap gap-12 ">
+              {skelArr.map((el) => {
+                return (
+                  <Skeleton
+                    key={el}
+                    className="h-[331px] w-[165px] rounded-[20px]"
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <div className="w-[387px] border-l border-l-[#E4E4E7] pl-5">
+            <div className="flex flex-col gap-1 pb-4 ">
+              <Skeleton className="w-[200px] h-[35px] rounded-full" />
+              <Skeleton className="w-[200px] h-[30px] rounded-full" />
+            </div>
+            <div className="flex gap-4 flex-wrap w-[387px] pt-4">
+              {skelArr.map((ele) => {
+                return <Skeleton key={ele} className="w-[100px] h-5" />;
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="w-screen  flex flex-col gap-8 items-center">
       <h1 className="w-7xl font-sans text-[#09090B] text-[30px] font-semibold">
@@ -98,22 +136,7 @@ export const SearchPage = ({ searchVal, genreObject }: GenrePageType) => {
             </p>
           </div>
           <div className="flex gap-4 flex-wrap w-[387px] pt-4">
-            {genreObject?.genres.map((ele) => {
-              return (
-                <Button
-                  key={ele.id}
-                  variant="outline"
-                  className={`h-5 p-0.5`}
-                  onClick={() => {
-                    router.push(`/genre/${ele.id}`);
-                  }}
-                >
-                  {" "}
-                  <span className="text-[14px]  font-medium">{ele.name}</span>
-                  <HiChevronRight className="size-4" />
-                </Button>
-              );
-            })}
+            <GenreButton setObject={setObject} />
           </div>
         </div>
       </div>

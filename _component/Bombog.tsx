@@ -1,6 +1,5 @@
 "use client";
-import * as React from "react";
-import { CaryDataType, BumbugProps } from "@/_type/types";
+import { BumbugProps } from "@/_type/types";
 
 export const Bombog = ({ CaryData, current }: BumbugProps) => {
   return (

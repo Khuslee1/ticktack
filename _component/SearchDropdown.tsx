@@ -106,7 +106,7 @@ export const SearchDropdown = () => {
                       objectFit: "fill",
                     }}
                   ></div>
-                  <div className="flex flex-col line-clamp-2 w-[454px] h-[100px]">
+                  <div className="flex flex-col line-clamp-2 w-[454px] ">
                     <p className="font-sans text-[18px] font-normal w-full line-clamp-2">
                       {ele.title}
                     </p>

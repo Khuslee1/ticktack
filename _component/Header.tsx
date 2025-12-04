@@ -1,65 +1,34 @@
 "use client";
-import { useEffect, useState, Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { HiChevronDown } from "react-icons/hi";
-import { HiChevronRight } from "react-icons/hi";
-import { IoMoonOutline } from "react-icons/io5";
 import { TbMovie } from "react-icons/tb";
 import { genreObj } from "@/_type/types";
 import { useParams, useRouter } from "next/navigation";
 import { SearchDropdown } from "@/_component/SearchDropdown";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { GenreButton } from "./GenreButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-type setGenreType = {
-  setGenreObj: Dispatch<SetStateAction<genreObj | undefined>>;
-};
 
-export const Header = ({ setGenreObj }: setGenreType) => {
-  const [dark, setDark] = useState<boolean>(false);
-  const [dataRes, setDataRes] = useState<genreObj>();
+export const Header = () => {
   const router = useRouter();
   const params = useParams();
-  const idArr = (params.genreId ?? "").split("%2C");
-  useEffect(() => {
-    const awaitData = async () => {
-      try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/genre/movie/list?language=en`,
-          {
-            method: "GET",
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${process.env.TMDB_TOKEN_KEY}`,
-            },
-          }
-        );
+  const idArr: string[] = String(params.genreId ?? "")
+    .split("%2C")
+    .filter(Boolean);
+  const { setTheme, theme } = useTheme();
+  const [object, setObject] = useState<genreObj>();
 
-        const data = (await res.json()) as genreObj;
-        setDataRes(data);
-        setGenreObj(data);
-      } catch (err) {
-        console.log("error");
-      }
-    };
-
-    awaitData();
-  }, []);
-
-  useEffect(() => {
-    if (dark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [dark]);
   return (
     <div
       className={`w-screen h-[59px] flex items-center justify-center  pl-4 pr-4 sticky top-0 left-0 z-50 ${
-        !dark ? "bg-white" : "bg-black"
+        theme == "dark" ? "bg-black" : "bg-white"
       }`}
     >
       <div className="w-7xl h-9 flex justify-between">
@@ -93,28 +62,7 @@ export const Header = ({ setGenreObj }: setGenreType) => {
                 </DropdownMenuLabel>
               </div>
               <div className="flex gap-4 flex-wrap w-[537px] pt-4 border-t">
-                {dataRes?.genres.map((ele) => {
-                  return (
-                    <Button
-                      key={ele.id}
-                      variant="outline"
-                      className={
-                        idArr.includes(String(ele.id))
-                          ? "h-5 p-0.5 bg-black text-white"
-                          : "h-5 p-0.5"
-                      }
-                      onClick={() => {
-                        router.push(`/genre/${ele.id}`);
-                      }}
-                    >
-                      {" "}
-                      <span className="text-[14px]  font-medium">
-                        {ele.name}
-                      </span>
-                      <HiChevronRight className="size-4" />
-                    </Button>
-                  );
-                })}
+                <GenreButton idArr={idArr} setObject={setObject} />
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -126,12 +74,16 @@ export const Header = ({ setGenreObj }: setGenreType) => {
         <Button
           variant="outline"
           onClick={() => {
-            setDark(!dark);
+            if (theme == "dark") return setTheme("light");
+            return setTheme("dark");
           }}
           className="h-9 w-9 p-0 rounded-md"
         >
           {" "}
-          <IoMoonOutline className="h-3 w-3 " />
+          {theme == "dark" && (
+            <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+          )}
+          <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
         </Button>
       </div>
     </div>

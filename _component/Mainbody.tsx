@@ -6,32 +6,7 @@ import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-
-type resultObj = {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-};
-type response = {
-  dates: { max: string; min: string };
-  page: number;
-  results: resultObj[];
-  totalPages: number;
-  totalResults: number;
-};
-
-type typeArr = resultObj[][];
+import { resultObj, responseObj, typeArr } from "@/_type/types";
 
 export const Mainbody = () => {
   const router = useRouter();
@@ -69,9 +44,9 @@ export const Mainbody = () => {
           fetch(urls[2], options),
         ]);
 
-        const data1 = (await res1.json()) as response;
-        const data2 = (await res2.json()) as response;
-        const data3 = (await res3.json()) as response;
+        const data1 = (await res1.json()) as responseObj;
+        const data2 = (await res2.json()) as responseObj;
+        const data3 = (await res3.json()) as responseObj;
 
         setDataRes1(data1.results);
         setDataRes2(data2.results);

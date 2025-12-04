@@ -3,6 +3,7 @@ import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { GoStarFill } from "react-icons/go";
 import { useEffect, useState } from "react";
 import { PaginationI } from "@/_component/PaginationI";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { resultObj, responsetit, smallType } from "@/_type/types";
 import Link from "next/link";
@@ -11,6 +12,10 @@ export const Small = (props: smallType) => {
   const [dataResS, setDataResS] = useState<resultObj[]>([]);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(3);
+  const [loading, setLoading] = useState<boolean>(false);
+  const skelArr = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+  ];
   const linkDec = () => {
     if (
       props.title == "upcoming" ||
@@ -21,6 +26,7 @@ export const Small = (props: smallType) => {
     return `${process.env.NEXT_PUBLIC_BASE_URL}${props.title}/similar?language=en-US&page=${page}`;
   };
   useEffect(() => {
+    setLoading(true);
     const awaitDataS = async () => {
       try {
         const res = await fetch(linkDec(), {
@@ -35,7 +41,7 @@ export const Small = (props: smallType) => {
 
         setDataResS(data.results);
         setTotal(data.total_pages);
-        console.log("GG", data);
+        setLoading(false);
       } catch (err) {
         console.log("error");
       }
@@ -43,6 +49,25 @@ export const Small = (props: smallType) => {
 
     awaitDataS();
   }, [page]);
+  if (loading) {
+    return (
+      <div className="w-screen flex flex-col items-center">
+        <div className="w-[1277px] flex flex-start">
+          <Skeleton className="w-[155px] h-12 rounded-[20px]" />
+        </div>
+        <div className="w-[1277px] flex gap-8 flex-wrap py-10">
+          {skelArr.map((el) => {
+            return (
+              <Skeleton
+                key={el}
+                className="h-[439px] w-[229px] rounded-[20px]"
+              />
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-screen flex flex-col items-center">
@@ -58,7 +83,7 @@ export const Small = (props: smallType) => {
         </h1>
       </div>
       <div className="w-[1277px] flex gap-8 flex-wrap py-10">
-        {dataResS.map((el) => {
+        {dataResS?.map((el) => {
           return (
             <Link key={el.id} href={`/${el.id}`}>
               <Card className={`h-[439px] w-[229px] p-0 gap-1`}>

@@ -176,3 +176,13 @@ export type pageType = {
   total: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
 };
+
+export type responseObj = {
+  dates: { max: string; min: string };
+  page: number;
+  results: resultObj[];
+  totalPages: number;
+  totalResults: number;
+};
+
+export type typeArr = resultObj[][];
